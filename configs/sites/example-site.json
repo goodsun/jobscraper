@@ -1,0 +1,20 @@
+{
+    "name": "example-site",
+    "domain": "example.com",
+    "selectors": {
+        "name": "h1.job-title",
+        "price": ".salary-info",
+        "facility_name": ".company-name",
+        "area": ".location",
+        "occupation": ".job-type",
+        "contract": ".employment-type",
+        "detail": ".job-description",
+        "required_skill": ".requirements",
+        "holiday": ".holidays",
+        "working_hours": ".working-hours"
+    },
+    "patterns": {
+        "salary": "年収\\s*(\\d+)万円",
+        "prefecture": "^([^都道府県]+[都道府県])"
+    }
+}

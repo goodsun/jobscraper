@@ -1,0 +1,28 @@
+{
+    "name": "kyujiner",
+    "domain": "kango.kyujiner.com",
+    "selectors": {
+        "name": "p.ichiran_t_d_name",
+        "price": "dt:contains('給与') + dd",
+        "facility_name": "dt:contains('施設形態') + dd",
+        "area": "dt:contains('勤務地') + dd",
+        "access": "dt:contains('勤務地') + dd",
+        "occupation": "dt:contains('担当業務') + dd",
+        "contract": "dt:contains('雇用形態') + dd",
+        "detail": "dt:contains('仕事内容') + dd",
+        "required_skill": "dt:contains('応募資格') + dd",
+        "holiday": "dt:contains('休日') + dd",
+        "working_hours": "dt:contains('勤務時間') + dd",
+        "working_style": "dt:contains('勤務形態') + dd",
+        "welfare_program": "dt:contains('待遇') + dd",
+        "title_original": "p.ichiran_t_bg_pink",
+        "license": "dt:contains('応募資格') + dd",
+        "staff_comment": "div.ichiran_t_d_comment p"
+    },
+    "patterns": {
+        "salary_hourly": "時給\\s*([0-9,]+)円",
+        "salary_daily": "日給\\s*([0-9,]+)円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "name": "benesse-mcm",
+    "domain": "kango.benesse-mcm.jp",
+    "selectors": {
+        "name": "p.m_catInfoTitle03 a",
+        "price": "dl.infoTable dt:contains('給料') + dd",
+        "facility_name": "h1.title",
+        "area": "table.m_facilityInfoTable01 th:contains('所在地') + td",
+        "access": "table.m_facilityInfoTable01 th:contains('最寄駅') + td",
+        "occupation": "dl.infoTable dt:contains('職種') + dd",
+        "contract": "dl.infoTable dt:contains('雇用形態') + dd",
+        "detail": "div.text01",
+        "required_skill": "dl.infoTable dt:contains('職種') + dd",
+        "holiday": "dl.infoTable dt:contains('勤務日') + dd",
+        "working_hours": "dl.infoTable dt:contains('勤務時間') + dd",
+        "working_style": "dl.infoTable dt:contains('雇用形態') + dd",
+        "welfare_program": "table.m_facilityInfoTable01 th:contains('運営事業者') + td",
+        "license": "dl.infoTable dt:contains('職種') + dd",
+        "facility_type": "table.m_facilityInfoTable01 th:contains('施設形態') + td",
+        "dept": "",
+        "position": "dl.infoTable dt:contains('職種') + dd",
+        "title_original": "p.m_catInfoTitle03 a"
+    },
+    "patterns": {
+        "salary_hourly": "時給：([0-9,]+)円",
+        "salary_monthly": "月収：([0-9,]+)円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

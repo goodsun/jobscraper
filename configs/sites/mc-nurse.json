@@ -1,0 +1,30 @@
+{
+    "name": "mc-nurse",
+    "domain": "mc-nurse.net",
+    "encoding": "shift_jis",
+    "selectors": {
+        "name": "h3",
+        "price": "table.pink th:contains('給与') + td",
+        "facility_name": "h2",
+        "area": "table.pink th:contains('勤務地') + td",
+        "access": "table.pink th:contains('交通機関') + td",
+        "occupation": "table.pink th:contains('募集職種') + td",
+        "contract": "table.pink th:contains('雇用形態') + td",
+        "detail": "table.pink th:contains('業務内容') + td",
+        "required_skill": "table.pink th:contains('応募条件') + td",
+        "holiday": "table.pink th:contains('休日') + td",
+        "working_hours": "table.job_service td.job_service_time",
+        "working_style": "table.pink th:contains('勤務形態') + td",
+        "welfare_program": "table.pink th:contains('社会保険') + td",
+        "license": "table.pink th:contains('募集職種') + td",
+        "facility_type": "table.pink th:contains('施設区分') + td",
+        "dept": "",
+        "position": "table.pink th:contains('業務内容') + td",
+        "title_original": "h3"
+    },
+    "patterns": {
+        "salary_monthly": "月収：([0-9,]+)円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

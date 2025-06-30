@@ -151,8 +151,16 @@ go run src/universal-extractor.go "https://kango.kyujiner.com/job/13249" result.
 
 ## 対応済みサイト
 
-- **kirara-support.jp** - 内蔵設定（自動検出）
-- **kango.kyujiner.com** - configs/sites/kyujiner.json
+- **benesse-mcm.jp** - 看護師求人（configs/sites/benesse-mcm.json）
+- **cme-pharmacist.jp** - 薬剤師求人（configs/sites/cme-pharmacist.json）
+- **kango.kyujiner.com** - 看護師求人（configs/sites/kyujiner.json）
+- **kirara-support.jp** - 看護師求人（configs/sites/kirara-support.json）
+- **mc-nurse.net** - 看護師求人（configs/sites/mc-nurse.json）
+- **nurse-pw.jp** - 看護師求人（configs/sites/nursepower.json）
+- **nursejj.com** - 看護師求人（configs/sites/nursejj.json）
+- **supernurse.co.jp** - 看護師求人（configs/sites/supernurse.json）
+- **th-agent.jp** - 登録販売者求人（configs/sites/th-agent.json）
+- **yakumatch.com** - 薬剤師求人（configs/sites/yakumatch.json）
 
 ## 出力フォーマット
 

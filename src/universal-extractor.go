@@ -12,6 +12,8 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/text/encoding/japanese"
+	"golang.org/x/text/transform"
 )
 
 // 汎用的なフィールド定義
@@ -45,6 +47,7 @@ type JobData struct {
 type SiteConfig struct {
 	Name        string                       `json:"name"`
 	Domain      string                       `json:"domain"`
+	Encoding    string                       `json:"encoding"`
 	Patterns    map[string]string           `json:"patterns"`
 	Selectors   map[string]string           `json:"selectors"`
 	Extractors  map[string]ExtractorConfig  `json:"extractors"`
@@ -72,11 +75,52 @@ func fetchURL(url string) (string, error) {
 	return string(body), nil
 }
 
+func convertEncoding(content string, encoding string) (string, error) {
+	if encoding == "" || encoding == "utf-8" {
+		return content, nil
+	}
+	
+	var decoder transform.Transformer
+	switch strings.ToLower(encoding) {
+	case "shift_jis", "sjis":
+		decoder = japanese.ShiftJIS.NewDecoder()
+	case "euc-jp":
+		decoder = japanese.EUCJP.NewDecoder()
+	case "iso-2022-jp":
+		decoder = japanese.ISO2022JP.NewDecoder()
+	default:
+		return content, nil // 未対応エンコーディングの場合はそのまま返す
+	}
+	
+	result, _, err := transform.String(decoder, content)
+	if err != nil {
+		return content, err // エラーの場合は元の文字列を返す
+	}
+	
+	return result, nil
+}
+
 func detectSite(url string) string {
 	if strings.Contains(url, "kirara-support.jp") {
 		return "kirara-support"
 	} else if strings.Contains(url, "kyujiner.com") {
 		return "kyujiner"
+	} else if strings.Contains(url, "cme-pharmacist.jp") {
+		return "cme-pharmacist"
+	} else if strings.Contains(url, "th-agent.jp") {
+		return "th-agent"
+	} else if strings.Contains(url, "nursepower.co.jp") {
+		return "nursepower"
+	} else if strings.Contains(url, "nursejj.com") {
+		return "nursejj"
+	} else if strings.Contains(url, "yakumatch.com") {
+		return "yakumatch"
+	} else if strings.Contains(url, "supernurse.co.jp") {
+		return "supernurse"
+	} else if strings.Contains(url, "mc-nurse.net") {
+		return "mc-nurse"
+	} else if strings.Contains(url, "benesse-mcm.jp") {
+		return "benesse-mcm"
 	}
 	// 他のサイトの判定を追加
 	return "default"
@@ -84,11 +128,6 @@ func detectSite(url string) string {
 
 func loadSiteConfig(siteName string) (*SiteConfig, error) {
 	configPath := filepath.Join("configs", "sites", siteName+".json")
-	
-	// デフォルト設定がない場合は、内蔵の設定を使用
-	if siteName == "kirara-support" {
-		return getKiraraSupportConfig(), nil
-	}
 	
 	// カスタム設定ファイルを読み込む
 	configData, err := ioutil.ReadFile(configPath)
@@ -104,32 +143,6 @@ func loadSiteConfig(siteName string) (*SiteConfig, error) {
 	return &config, nil
 }
 
-func getKiraraSupportConfig() *SiteConfig {
-	return &SiteConfig{
-		Name:   "kirara-support",
-		Domain: "kirara-support.jp",
-		Selectors: map[string]string{
-			"name":           "h2.bl_jobPost_title",
-			"price":          "dl.bl_jobPost_table dt:contains('給与') + dd",
-			"facility_name":  "dl.bl_jobPost_table dt:contains('施設名') + dd",
-			"area":           "dl.bl_jobPost_table dt:contains('勤務地') + dd",
-			"access":         "dl.bl_jobPost_table dt:contains('最寄り駅') + dd",
-			"occupation":     "dl.bl_jobPost_table dt:contains('職種') + dd",
-			"contract":       "dl.bl_jobPost_table dt:contains('雇用形態') + dd",
-			"staff_comment":  "div.bl_bulletList.bl_bulletList__nobull h3",
-			"dept":           "table.bl_defTable th:contains('診療科目') + td",
-			"detail":         "table.bl_defTable th:contains('仕事内容') + td",
-			"facility_type":  "table.bl_defTable th:contains('施設形態') + td",
-			"holiday":        "table.bl_defTable th:contains('休日') + td",
-			"license":        "table.bl_defTable th:contains('必要な資格') + td",
-			"required_skill": "table.bl_defTable th:contains('必要な業務経験') + td",
-			"station":        "table.bl_defTable th:contains('最寄駅') + td",
-			"welfare_program": "table.bl_defTable th:contains('福利厚生') + td",
-			"working_hours":  "table.bl_defTable th:contains('就業時間') + td",
-			"working_style":  "table.bl_defTable th:contains('勤務形態') + td",
-		},
-	}
-}
 
 func extractWithSelector(doc *goquery.Document, selector string) string {
 	return strings.TrimSpace(doc.Find(selector).First().Text())
@@ -345,6 +358,17 @@ func main() {
 	htmlContent, err := fetchURL(url)
 	if err != nil {
 		log.Fatal("Error fetching URL:", err)
+	}
+
+	// エンコーディング変換
+	if config.Encoding != "" {
+		convertedContent, err := convertEncoding(htmlContent, config.Encoding)
+		if err != nil {
+			fmt.Printf("Warning: Failed to convert encoding from %s: %v\n", config.Encoding, err)
+		} else {
+			htmlContent = convertedContent
+			fmt.Printf("Converted encoding from %s to UTF-8\n", config.Encoding)
+		}
 	}
 
 	// データを抽出

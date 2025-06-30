@@ -1,0 +1,31 @@
+{
+    "name": "nursepower",
+    "domain": "www.nursepower.co.jp",
+    "selectors": {
+        "name": "p.wrapCol__col__text",
+        "price": "div.planeTable__head:contains('総支給') + div.planeTable__cont",
+        "facility_name": "div.detailUnit__head h1",
+        "area": "div.planeTable__head:contains('所在地') + div.planeTable__cont",
+        "access": "div.planeTable__head:contains('アクセス') + div.planeTable__cont",
+        "occupation": "div.planeTable__head:contains('資格') + div.planeTable__cont",
+        "contract": "div.planeTable__head:contains('雇用形態') + div.planeTable__cont",
+        "detail": "div.planeTable__head:contains('備考') + div.planeTable__cont",
+        "required_skill": "div.planeTable__head:contains('備考') + div.planeTable__cont",
+        "holiday": "div.planeTable__head:contains('休日') + div.planeTable__cont",
+        "working_hours": "div.planeTable__head:contains('勤務時間') + div.planeTable__cont",
+        "working_style": "div.planeTable__head:contains('雇用形態') + div.planeTable__cont",
+        "welfare_program": "div.planeTable__head:contains('福利厚生') + div.planeTable__cont",
+        "license": "div.planeTable__head:contains('資格') + div.planeTable__cont",
+        "staff_comment": "p.commentbox__text",
+        "station": "div.planeTable__head:contains('アクセス') + div.planeTable__cont",
+        "facility_type": "div.planeTable__head:contains('診療科目') + div.planeTable__cont",
+        "dept": "div.planeTable__head:contains('診療科目') + div.planeTable__cont",
+        "position": "div.planeTable__head:contains('配属先') + div.planeTable__cont",
+        "title_original": "p.wrapCol__col__text"
+    },
+    "patterns": {
+        "salary_monthly": "月給\\s*([0-9,]+)～([0-9,]+)円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

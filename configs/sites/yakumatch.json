@@ -1,0 +1,29 @@
+{
+    "name": "yakumatch",
+    "domain": "kangoshi.yakumatch.com",
+    "selectors": {
+        "name": "h1.tit_line",
+        "price": "table.table_detail th:contains('給与') + td",
+        "facility_name": "table.table_detail th:contains('法人名') + td",
+        "area": "table.table_detail th:contains('勤務地') + td",
+        "access": "table.table_detail th:contains('アクセス') + td",
+        "occupation": "table.table_detail th:contains('募集職種') + td",
+        "contract": "table.table_detail th:contains('勤務形態') + td",
+        "detail": "table.table_detail th:contains('担当業務') + td",
+        "required_skill": "table.table_detail th:contains('応募条件') + td",
+        "holiday": "table.table_detail th:contains('休日') + td",
+        "working_hours": "table.table_detail th:contains('勤務時間') + td",
+        "working_style": "table.table_detail th:contains('勤務形態') + td",
+        "welfare_program": "table.table_detail th:contains('社会保険') + td",
+        "license": "table.table_detail th:contains('募集職種') + td",
+        "facility_type": "ul.list_type li.list_type_place",
+        "dept": "table.table_detail th:contains('診療科目') + td",
+        "position": "table.table_detail th:contains('担当業務') + td",
+        "title_original": "h1.tit_line"
+    },
+    "patterns": {
+        "salary_monthly": "月給\\s*([0-9,]+)円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

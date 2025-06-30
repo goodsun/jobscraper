@@ -1,0 +1,32 @@
+{
+    "name": "cme-pharmacist",
+    "domain": "www.cme-pharmacist.jp",
+    "selectors": {
+        "name": "dl.job_list_body dt",
+        "price": "dl.pay dd",
+        "facility_name": "div.item_001 dl:contains('業種') dd",
+        "area": "div.item_001 dl:contains('勤務地') dd",
+        "access": "dl.table_layout dt:contains('アクセス') + dd",
+        "occupation": "",
+        "contract": "div.item_001 dl.employment dd span",
+        "detail": "dl.job_description dd",
+        "required_skill": "dl.skill dd",
+        "holiday": "dl.table_layout dt:contains('休日') + dd",
+        "working_hours": "dl.table_layout dt:contains('勤務時間') + dd",
+        "working_style": "",
+        "welfare_program": "dl.table_layout dt:contains('社会保険') + dd",
+        "license": "dl.skill dd",
+        "staff_comment": "div#Adviser_msg div.comment p",
+        "station": "dl.table_layout dt:contains('アクセス') + dd",
+        "facility_type": "div.item_001 dl:contains('業種') dd",
+        "dept": "dl.table_layout dt:contains('処方箋科目') + dd ul.medi_list",
+        "position": "",
+        "title_original": "dl.job_list_body dt"
+    },
+    "patterns": {
+        "salary_monthly": "月給\\s*:\\s*([0-9,]+)万?円",
+        "salary_yearly": "年収：([0-9,]+)万?円～([0-9,]+)万?円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

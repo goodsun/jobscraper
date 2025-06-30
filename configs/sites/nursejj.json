@@ -1,0 +1,29 @@
+{
+    "name": "nursejj",
+    "domain": "www.nursejj.com",
+    "selectors": {
+        "name": "div.kyujin_white span:first-child",
+        "price": "table.detailtbl th:contains('給与') + td",
+        "facility_name": "h2",
+        "area": "table.detailtbl th:contains('住所') + td",
+        "access": "table.detailtbl th:contains('交通アクセス') + td",
+        "occupation": "table.detailtbl th:contains('必要資格') + td .the-choice",
+        "contract": "table.detailtbl th:contains('勤務形態') + td .the-choice",
+        "detail": "table.detailtbl th:contains('業務内容') + td",
+        "required_skill": "table.detailtbl th:contains('業務内容') + td",
+        "holiday": "table.detailtbl th:contains('休日') + td",
+        "working_hours": "table.detailtbl th:contains('勤務時間') + td",
+        "working_style": "table.detailtbl th:contains('勤務形態') + td .the-choice",
+        "welfare_program": "table.detailtbl th:contains('待遇') + td",
+        "license": "table.detailtbl th:contains('必要資格') + td .the-choice",
+        "facility_type": "table.detailtbl th:contains('勤務先区分') + td .the-choice",
+        "dept": "table.detailtbl th:contains('診療科目') + td",
+        "position": "table.detailtbl th:contains('業務区分') + td .the-choice",
+        "title_original": "div.kyujin_white span:first-child"
+    },
+    "patterns": {
+        "salary_monthly": "月給：([0-9,]+)円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

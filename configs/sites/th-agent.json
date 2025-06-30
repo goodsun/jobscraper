@@ -1,0 +1,31 @@
+{
+    "name": "th-agent",
+    "domain": "www.th-agent.jp",
+    "selectors": {
+        "name": "dl.job_list_body dt",
+        "price": "dl.pay dd",
+        "facility_name": "dl.job_list_body dt span",
+        "area": "div.item_001 dl:contains('勤務地') dd",
+        "access": "dl.table_layout dt:contains('アクセス') + dd",
+        "occupation": "",
+        "contract": "div.item_001 dl.employment dd span",
+        "detail": "dl.table_layout dt:contains('業務内容') + dd",
+        "required_skill": "dl.skill dd",
+        "holiday": "dl.table_layout dt:contains('休日') + dd",
+        "working_hours": "dl.table_layout dt:contains('勤務時間') + dd",
+        "working_style": "",
+        "welfare_program": "dl.table_layout dt:contains('福利厚生') + dd",
+        "license": "dl.skill dd",
+        "staff_comment": "div#Adviser_msg div.comment p",
+        "station": "dl.table_layout dt:contains('アクセス') + dd",
+        "facility_type": "div.item_001 dl:contains('業種') dd",
+        "dept": "",
+        "position": "",
+        "title_original": "dl.job_list_body dt"
+    },
+    "patterns": {
+        "salary_monthly": "月給\\s*:\\s*([0-9,]+)円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

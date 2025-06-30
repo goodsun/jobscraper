@@ -1,0 +1,29 @@
+{
+    "name": "supernurse",
+    "domain": "www.supernurse.co.jp",
+    "selectors": {
+        "name": "div.tit-works-content",
+        "price": "table.table-pink th:contains('給与') + td",
+        "facility_name": "div.works-content-txt p div:first-child",
+        "area": "table.table-pink th:contains('就業場所') + td",
+        "access": "table.table-pink th:contains('沿線・最寄駅') + td",
+        "occupation": "table.table-pink th:contains('応募資格') + td",
+        "contract": "table.table-pink th:contains('雇用形態') + td",
+        "detail": "table.table-pink th:contains('業務内容') + td",
+        "required_skill": "table.table-pink th:contains('応募資格') + td",
+        "holiday": "table.table-pink th:contains('休日・休暇') + td",
+        "working_hours": "table.table-pink th:contains('勤務時間') + td",
+        "working_style": "table.table-pink th:contains('勤務形態') + td",
+        "welfare_program": "table.table-pink th:contains('待遇・福利厚生') + td",
+        "license": "table.table-pink th:contains('応募資格') + td",
+        "facility_type": "table.table-gray th:contains('業務内容') + td",
+        "dept": "",
+        "position": "table.table-gray th:contains('業務内容') + td",
+        "title_original": "div.tit-works-content"
+    },
+    "patterns": {
+        "salary_monthly": "月給([0-9,]+)万円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

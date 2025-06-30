@@ -1,0 +1,24 @@
+{
+    "name": "kirara-support",
+    "domain": "kirara-support.jp",
+    "selectors": {
+        "name": "h2.bl_jobPost_title",
+        "price": "dl.bl_jobPost_table dt:contains('給与') + dd",
+        "facility_name": "dl.bl_jobPost_table dt:contains('施設名') + dd",
+        "area": "dl.bl_jobPost_table dt:contains('勤務地') + dd",
+        "access": "dl.bl_jobPost_table dt:contains('最寄り駅') + dd",
+        "occupation": "dl.bl_jobPost_table dt:contains('職種') + dd",
+        "contract": "dl.bl_jobPost_table dt:contains('雇用形態') + dd",
+        "staff_comment": "div.bl_bulletList.bl_bulletList__nobull h3",
+        "dept": "table.bl_defTable th:contains('診療科目') + td",
+        "detail": "table.bl_defTable th:contains('仕事内容') + td",
+        "facility_type": "table.bl_defTable th:contains('施設形態') + td",
+        "holiday": "table.bl_defTable th:contains('休日') + td",
+        "license": "table.bl_defTable th:contains('必要な資格') + td",
+        "required_skill": "table.bl_defTable th:contains('必要な業務経験') + td",
+        "station": "table.bl_defTable th:contains('最寄駅') + td",
+        "welfare_program": "table.bl_defTable th:contains('福利厚生') + td",
+        "working_hours": "table.bl_defTable th:contains('就業時間') + td",
+        "working_style": "table.bl_defTable th:contains('勤務形態') + td"
+    }
+}

@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -325,22 +326,154 @@ func extractLocationInfo(data *JobData) {
 	}
 }
 
+func listConfigs() {
+	configDir := filepath.Join("configs", "sites")
+	files, err := ioutil.ReadDir(configDir)
+	if err != nil {
+		fmt.Printf("Error reading config directory: %v\n", err)
+		return
+	}
+	
+	fmt.Println("Available Site Configurations")
+	fmt.Println("=============================")
+	fmt.Println()
+	
+	var configs []string
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".json") {
+			configName := strings.TrimSuffix(file.Name(), ".json")
+			configs = append(configs, configName)
+		}
+	}
+	
+	sort.Strings(configs)
+	
+	for _, config := range configs {
+		// 設定ファイルを読み込んでドメインを取得
+		configPath := filepath.Join(configDir, config+".json")
+		data, err := ioutil.ReadFile(configPath)
+		if err != nil {
+			fmt.Printf("%-20s (error reading config)\n", config)
+			continue
+		}
+		
+		var siteConfig SiteConfig
+		if err := json.Unmarshal(data, &siteConfig); err != nil {
+			fmt.Printf("%-20s (error parsing config)\n", config)
+			continue
+		}
+		
+		domain := siteConfig.Domain
+		if domain == "" {
+			domain = "no domain specified"
+		}
+		fmt.Printf("%-20s - %s\n", config, domain)
+	}
+	
+	fmt.Println()
+	fmt.Println("Usage: universal-extractor --config <name> <url>")
+}
+
+func showHelp() {
+	fmt.Println("Universal Job Data Extractor")
+	fmt.Println("============================")
+	fmt.Println()
+	fmt.Println("Usage:")
+	fmt.Println("  universal-extractor [options] <url> [output_file]")
+	fmt.Println("  universal-extractor -h | --help")
+	fmt.Println("  universal-extractor --list-configs")
+	fmt.Println()
+	fmt.Println("Arguments:")
+	fmt.Println("  <url>          - 求人詳細ページのURL")
+	fmt.Println("  [output_file]  - 出力ファイル名（省略時は標準出力）")
+	fmt.Println()
+	fmt.Println("Options:")
+	fmt.Println("  -h, --help      - このヘルプメッセージを表示")
+	fmt.Println("  --config <name> - サイト設定を指定（省略時は自動検出）")
+	fmt.Println("  --list-configs  - 利用可能な設定ファイル一覧を表示")
+	fmt.Println()
+	fmt.Println("Examples:")
+	fmt.Println("  # 標準出力に表示（自動サイト検出）")
+	fmt.Println("  universal-extractor https://example.com/job/123")
+	fmt.Println()
+	fmt.Println("  # ファイルに保存（自動サイト検出）")
+	fmt.Println("  universal-extractor https://example.com/job/123 output.json")
+	fmt.Println()
+	fmt.Println("  # 特定のサイト設定を使用")
+	fmt.Println("  universal-extractor --config custom-site https://example.com/job/123")
+	fmt.Println()
+	fmt.Println("  # 利用可能な設定を確認")
+	fmt.Println("  universal-extractor --list-configs")
+	fmt.Println()
+	fmt.Println("Supported Sites:")
+	fmt.Println("  - benesse-mcm.jp")
+	fmt.Println("  - cme-pharmacist.jp")
+	fmt.Println("  - kango.kyujiner.com")
+	fmt.Println("  - kirara-support.jp")
+	fmt.Println("  - mc-nurse.net")
+	fmt.Println("  - nurse-pw.jp")
+	fmt.Println("  - nursejj.com")
+	fmt.Println("  - supernurse.co.jp")
+	fmt.Println("  - th-agent.jp")
+	fmt.Println("  - yakumatch.com")
+}
+
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("Usage: go run universal-extractor.go <url> <output_file> [site_config]")
-		fmt.Println("Example: go run universal-extractor.go https://example.com/job result.json")
-		fmt.Println("Example: go run universal-extractor.go https://example.com/job result.json custom-site")
+	var url string
+	var outputFile string
+	var siteName string
+	var configSpecified bool
+
+	// 引数解析
+	args := os.Args[1:]
+	i := 0
+	
+	for i < len(args) {
+		arg := args[i]
+		
+		// ヘルプオプション
+		if arg == "-h" || arg == "--help" {
+			showHelp()
+			os.Exit(0)
+		}
+		
+		// 設定一覧オプション
+		if arg == "--list-configs" {
+			listConfigs()
+			os.Exit(0)
+		}
+		
+		// 設定ファイルオプション
+		if arg == "--config" {
+			if i+1 >= len(args) {
+				fmt.Println("Error: --config requires a site name")
+				os.Exit(1)
+			}
+			siteName = args[i+1]
+			configSpecified = true
+			i += 2
+			continue
+		}
+		
+		// URL（最初の非オプション引数）
+		if url == "" && !strings.HasPrefix(arg, "-") {
+			url = arg
+		} else if outputFile == "" && !strings.HasPrefix(arg, "-") {
+			// 出力ファイル（2番目の非オプション引数）
+			outputFile = arg
+		}
+		
+		i++
+	}
+	
+	// URL必須チェック
+	if url == "" {
+		showHelp()
 		os.Exit(1)
 	}
-
-	url := os.Args[1]
-	outputFile := os.Args[2]
 	
-	// サイト設定の自動検出または指定
-	siteName := ""
-	if len(os.Args) >= 4 {
-		siteName = os.Args[3]
-	} else {
+	// サイト設定の自動検出（--configが指定されていない場合）
+	if !configSpecified {
 		siteName = detectSite(url)
 	}
 	
@@ -383,11 +516,15 @@ func main() {
 		log.Fatal("Error marshaling JSON:", err)
 	}
 
-	// ファイルに保存
-	err = ioutil.WriteFile(outputFile, jsonData, 0644)
-	if err != nil {
-		log.Fatal("Error writing output file:", err)
+	// 出力先が指定されていない場合は標準出力に表示
+	if outputFile == "" {
+		fmt.Println(string(jsonData))
+	} else {
+		// ファイルに保存
+		err = ioutil.WriteFile(outputFile, jsonData, 0644)
+		if err != nil {
+			log.Fatal("Error writing output file:", err)
+		}
+		fmt.Printf("Data extracted successfully and saved to %s\n", outputFile)
 	}
-
-	fmt.Printf("Data extracted successfully and saved to %s\n", outputFile)
 }

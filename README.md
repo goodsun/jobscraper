@@ -29,14 +29,24 @@
 
 ### 1. 汎用抽出ツール（universal-extractor）
 
-URLから直接データを抽出（自動サイト検出）：
+URLから直接データを抽出して標準出力に表示：
+```bash
+go run src/universal-extractor.go "https://example.com/job/123"
+```
+
+ファイルに保存（自動サイト検出）：
 ```bash
 go run src/universal-extractor.go "https://example.com/job/123" output.json
 ```
 
 特定のサイト設定を指定：
 ```bash
-go run src/universal-extractor.go "https://example.com/job/123" output.json custom-site
+go run src/universal-extractor.go --config custom-site "https://example.com/job/123"
+```
+
+ヘルプを表示：
+```bash
+go run src/universal-extractor.go -h
 ```
 
 ### 2. ビルドして使用
@@ -117,7 +127,11 @@ go run src/universal-extractor.go "https://your-site.com/job/123" result.json yo
 
 3. 実行：
 ```bash
+# 自動検出で実行
 go run src/universal-extractor.go "https://kango.kyujiner.com/job/13249" result.json
+
+# 明示的に設定を指定
+go run src/universal-extractor.go --config kyujiner "https://kango.kyujiner.com/job/13249"
 ```
 
 ## CSSセレクターの書き方

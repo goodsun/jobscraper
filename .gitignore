@@ -1,0 +1,49 @@
+# 出力ファイル
+output/*
+output/
+
+# 実行ファイル
+job-extractor
+*.exe
+
+# テスト用HTMLファイル
+examples/*.html
+
+# 一時的な設定ファイル
+configs/*.json
+!configs/sites/
+
+# Go関連
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+/src/go.mod
+/src/go.sum
+
+# IDE関連
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS関連
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ログファイル
+*.log
+
+# その他
+nouse/
+format/

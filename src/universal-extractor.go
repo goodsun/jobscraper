@@ -128,6 +128,8 @@ func detectSite(url string) string {
 		return "kiracare"
 	} else if strings.Contains(url, "pharmacareer.jp") {
 		return "pharmacareer"
+	} else if strings.Contains(url, "nurse-step.com") {
+		return "nurse-step"
 	}
 	// 他のサイトの判定を追加
 	return "default"

@@ -1,0 +1,25 @@
+{
+    "name": "nurse-step",
+    "domain": "nurse-step.com",
+    "selectors": {
+        "name": "title",
+        "price": ".price_txt.cl_pk",
+        "facility_name": "th:contains('施設名') + td",
+        "area": "th:contains('勤務エリア') + td b",
+        "occupation": "th:contains('職種') + td",
+        "contract": "th:contains('雇用形態') + td",
+        "dept": "th:contains('診療科目') + td",
+        "detail": "th:contains('担当業務') + td",
+        "required_skill": "th:contains('経験・スキル') + td",
+        "holiday": "th:contains('休日') + td",
+        "working_hours": ".tbl01 tr:nth-child(1) td .price_txt:contains('：')",
+        "welfare_program": "th:contains('手当') + td",
+        "license": "th:contains('資格') + td",
+        "staff_comment": "th:contains('コメント') + td",
+        "station": ".notextover_pickpc:contains('駅')",
+        "access": "th:contains('アクセス') + td",
+        "working_style": "th:contains('勤務形態') + td",
+        "facility_type": "th:contains('施設形態') + td",
+        "position": "th:contains('役職') + td"
+    }
+}

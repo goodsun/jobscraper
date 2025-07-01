@@ -158,11 +158,48 @@ func extractWithSelector(doc *goquery.Document, selector string) string {
 	return normalizeSpaces(text)
 }
 
-// normalizeSpaces replaces multiple consecutive spaces with a single space
+// normalizeSpaces replaces multiple consecutive spaces with a single space,
+// multiple consecutive newlines with double newlines, and removes link text
 func normalizeSpaces(text string) string {
-	// 複数の半角スペースを1つに置き換え
-	re := regexp.MustCompile(`\s{2,}`)
-	return re.ReplaceAllString(text, " ")
+	// リンクテキストのパターンを削除
+	linkPatterns := []string{
+		`地図を見る`,
+		`地図で見る`,
+		`マップを見る`,
+		`詳細を見る`,
+		`詳しく見る`,
+		`もっと見る`,
+		`続きを見る`,
+		`クリックして`,
+		`こちらをクリック`,
+		`詳細はこちら`,
+		`▶`,
+		`▼`,
+		`▲`,
+		`►`,
+		`»`,
+		`≫`,
+		`>`,
+	}
+	
+	// 各パターンを削除
+	for _, pattern := range linkPatterns {
+		linkRe := regexp.MustCompile(pattern)
+		text = linkRe.ReplaceAllString(text, "")
+	}
+	
+	// 3つ以上の改行を2つに置き換え
+	newlineRe := regexp.MustCompile(`\n{3,}`)
+	text = newlineRe.ReplaceAllString(text, "\n\n")
+	
+	// 複数の半角スペース（改行以外）を1つに置き換え
+	spaceRe := regexp.MustCompile(`[^\S\n]{2,}`)
+	text = spaceRe.ReplaceAllString(text, " ")
+	
+	// 前後の空白を削除
+	text = strings.TrimSpace(text)
+	
+	return text
 }
 
 func extractData(htmlContent string, config *SiteConfig) (*JobData, error) {

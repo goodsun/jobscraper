@@ -2,9 +2,7 @@
     "name": "kango-oshigoto",
     "domain": "kango-oshigoto.jp",
     "selectors": {
-        "name": "h1.p-header__ttl",
         "area": "h3:contains('勤務地') ~ p",
-        "detail": "h3:contains('業務内容') ~ p",
         "station": "h3:contains('交通情報') ~ p"
     },
     "patterns": {

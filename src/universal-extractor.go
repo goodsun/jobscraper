@@ -168,15 +168,22 @@ func extractData(htmlContent string, config *SiteConfig) (*JobData, error) {
 	// JSON-LD extraction (共通)
 	extractJSONLD(htmlContent, data)
 
-	// セレクターベースの抽出（既存の値がある場合は上書きしない）
+	// セレクターベースの抽出（ハイブリッド方式：JSON-LDとセレクターを組み合わせ）
 	if config.Selectors != nil {
-		if selector, ok := config.Selectors["name"]; ok && data.Name == "" {
-			data.Name = extractWithSelector(doc, selector)
-			data.TitleOriginal = data.Name
+		// 重要な基本情報は常にセレクターを優先（既存サイト互換性のため）
+		if selector, ok := config.Selectors["name"]; ok {
+			if selectorValue := extractWithSelector(doc, selector); selectorValue != "" {
+				data.Name = selectorValue
+				data.TitleOriginal = selectorValue
+			}
 		}
-		if selector, ok := config.Selectors["price"]; ok && data.Price == "" {
-			data.Price = extractWithSelector(doc, selector)
+		if selector, ok := config.Selectors["price"]; ok {
+			if selectorValue := extractWithSelector(doc, selector); selectorValue != "" {
+				data.Price = selectorValue
+			}
 		}
+		
+		// その他の情報はJSON-LDを優先し、取得できない場合のみセレクターを使用
 		if selector, ok := config.Selectors["facility_name"]; ok && data.FacilityName == "" {
 			data.FacilityName = extractWithSelector(doc, selector)
 		}

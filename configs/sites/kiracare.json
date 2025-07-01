@@ -7,7 +7,7 @@
         "facility_name": "h2.p-headingPage",
         "area": "table.p-jobDetail__table th:contains('勤務地') + td",
         "occupation": "p.p-jobDetail__ttl",
-        "contract": "li.c-tag__status:first",
+        "contract": "li.c-tag__status",
         "facility_type": "table.p-jobDetail__table th:contains('施設') + td",
         "license": "table.p-jobDetail__table th:contains('資格') + td",
         "detail": "p.u-pt16",
@@ -15,6 +15,7 @@
         "holiday": ".p-considerBalloon__txt",
         "welfare_program": ".p-btnPrimary__appeal",
         "access": "table.p-jobDetail__table th:contains('勤務地') + td",
+        "station": "table.p-jobDetail__table th:contains('勤務地') + td",
         "staff_comment": ".p-considerBalloon__txt"
     }
 }

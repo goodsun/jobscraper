@@ -167,11 +167,15 @@ go run src/universal-extractor.go --config kyujiner "https://kango.kyujiner.com/
 
 - **benesse-mcm.jp** - 看護師求人（configs/sites/benesse-mcm.json）
 - **cme-pharmacist.jp** - 薬剤師求人（configs/sites/cme-pharmacist.json）
-- **kango.kyujiner.com** - 看護師求人（configs/sites/kyujiner.json）
+- **job.kiracare.jp** - 介護求人（configs/sites/kiracare.json）
+- **kango-oshigoto.jp** - 看護師求人（configs/sites/kango-oshigoto.json）
 - **kirara-support.jp** - 看護師求人（configs/sites/kirara-support.json）
+- **kyujiner.com** - 看護師求人（configs/sites/kyujiner.json）
 - **mc-nurse.net** - 看護師求人（configs/sites/mc-nurse.json）
-- **nurse-pw.jp** - 看護師求人（configs/sites/nursepower.json）
+- **nurse-step.com** - 看護師求人（configs/sites/nurse-step.json）
 - **nursejj.com** - 看護師求人（configs/sites/nursejj.json）
+- **nursepower.co.jp** - 看護師求人（configs/sites/nursepower.json）
+- **pharmacareer.jp** - 薬剤師求人（configs/sites/pharmacareer.json）
 - **supernurse.co.jp** - 看護師求人（configs/sites/supernurse.json）
 - **th-agent.jp** - 登録販売者求人（configs/sites/th-agent.json）
 - **yakumatch.com** - 薬剤師求人（configs/sites/yakumatch.json）

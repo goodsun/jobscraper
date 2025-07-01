@@ -159,8 +159,23 @@ func extractWithSelector(doc *goquery.Document, selector string) string {
 }
 
 // normalizeSpaces replaces multiple consecutive spaces with a single space,
-// multiple consecutive newlines with double newlines, and removes link text
+// multiple consecutive newlines with double newlines, removes link text, and converts HTML br tags to newlines
 func normalizeSpaces(text string) string {
+	// HTMLの改行タグを改行文字に置き換え
+	brPatterns := []string{
+		`\\u003cbr\\u003e`,
+		`\\u003cbr/\\u003e`,
+		`\\u003cbr`,
+		`<br>`,
+		`<br/>`,
+		`<br />`,
+	}
+	
+	for _, pattern := range brPatterns {
+		brRe := regexp.MustCompile(`(?i)`+pattern)
+		text = brRe.ReplaceAllString(text, "\n")
+	}
+	
 	// リンクテキストのパターンを削除
 	linkPatterns := []string{
 		`地図を見る`,

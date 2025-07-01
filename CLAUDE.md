@@ -1,8 +1,7 @@
-# スクレイパー作業計画
+# Universal Job Data Extractor - 開発ガイド
 
-指定するサイトの求人情報を巡回し、各情報を取得する XPath を収集して欲しい。
-format フォルダに 3 つのサンプルとフォーマットが入っています。
-それを参考に、指定するページから該当の項目を取得できる XPath を取得し json の該当の場所を埋めてください。
+指定するサイトの求人情報を自動的に取得するツールです。
+CSSセレクターベースのuniversal-extractorが主要ツールとなっています。
 
 ## 新しいサイト追加手順（重要）
 
@@ -62,7 +61,10 @@ func detectSite(url string) string {
 go run src/universal-extractor.go "対象URL" output/test.json
 
 # 設定を明示的に指定
-go run src/universal-extractor.go "対象URL" output/test.json サイト名
+go run src/universal-extractor.go --config サイト名 "対象URL" output/test.json
+
+# 利用可能な設定一覧を表示
+go run src/universal-extractor.go --list-configs
 ```
 
 ## セレクターの書き方例
@@ -94,7 +96,7 @@ go run src/universal-extractor.go "対象URL" output/test.json サイト名
 }
 ```
 
-### 実例（kirara-support）- 内蔵
+### 実例（kirara-support）
 ```json
 {
     "name": "h2.bl_jobPost_title",
@@ -115,3 +117,27 @@ go run src/universal-extractor.go "対象URL" output/test.json サイト名
 - :contains() は部分一致
 - + は隣接する次の要素
 - 日本語のテキストマッチングも可能
+
+## 対応済みサイト一覧
+
+- benesse-mcm.jp - 看護師求人
+- cme-pharmacist.jp - 薬剤師求人
+- job.kiracare.jp - 介護求人
+- kango-oshigoto.jp - 看護師求人
+- kirara-support.jp - 看護師求人
+- kyujiner.com - 看護師求人
+- mc-nurse.net - 看護師求人
+- nurse-step.com - 看護師求人
+- nursejj.com - 看護師求人
+- nursepower.co.jp - 看護師求人
+- pharmacareer.jp - 薬剤師求人
+- supernurse.co.jp - 看護師求人
+- th-agent.jp - 登録販売者求人
+- yakumatch.com - 薬剤師求人
+
+## ファイル構成
+
+- `src/universal-extractor.go` - メインの抽出ツール
+- `configs/sites/*.json` - サイト別の設定ファイル
+- `format/` - サンプルフォーマット（XPath用、レガシー）
+- `output/` - 出力されたJSONファイル保存先

@@ -294,6 +294,17 @@ func extractData(htmlContent string, config *SiteConfig) (*JobData, error) {
 		}
 	}
 
+	// サイト固有の後処理
+	if config.Name == "benesse-mcm" {
+		// タイトルから施設名を抽出（例: "シンシア島田／看護師／正社員の求人情報" -> "シンシア島田"）
+		if data.Name != "" && data.FacilityName == "" {
+			facilityRegex := regexp.MustCompile(`^([^／]+)／`)
+			if matches := facilityRegex.FindStringSubmatch(data.Name); len(matches) > 1 {
+				data.FacilityName = normalizeSpaces(strings.TrimSpace(matches[1]))
+			}
+		}
+	}
+
 	// 住所から都道府県と市区町村を抽出
 	if data.Address != "" {
 		extractLocationInfo(data)

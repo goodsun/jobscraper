@@ -10,11 +10,11 @@
         "contract": "li.c-tag__status",
         "facility_type": "table.p-jobDetail__table th:contains('施設') + td",
         "license": "table.p-jobDetail__table th:contains('資格') + td",
-        "detail": "p.u-pt16",
-        "working_hours": ".p-headingPage__normal",
-        "holiday": ".p-considerBalloon__txt",
-        "welfare_program": ".p-btnPrimary__appeal",
-        "access": "table.p-jobDetail__table th:contains('勤務地') + td",
+        "detail": "dl.p-detailInfoList dt:contains('業務内容') + dd",
+        "working_hours": "dl.p-detailInfoList dt:contains('勤務時間') + dd",
+        "holiday": "dl.p-detailInfoList dt:contains('休日') + dd",
+        "welfare_program": "dl.p-detailInfoList dt:contains('福利厚生') + dd",
+        "access": "dl.p-detailInfoList dt:contains('交通情報') + dd",
         "station": "table.p-jobDetail__table th:contains('勤務地') + td",
         "staff_comment": ".p-considerBalloon__txt"
     }

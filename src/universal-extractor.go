@@ -168,61 +168,61 @@ func extractData(htmlContent string, config *SiteConfig) (*JobData, error) {
 	// JSON-LD extraction (共通)
 	extractJSONLD(htmlContent, data)
 
-	// セレクターベースの抽出
+	// セレクターベースの抽出（既存の値がある場合は上書きしない）
 	if config.Selectors != nil {
-		if selector, ok := config.Selectors["name"]; ok {
+		if selector, ok := config.Selectors["name"]; ok && data.Name == "" {
 			data.Name = extractWithSelector(doc, selector)
 			data.TitleOriginal = data.Name
 		}
-		if selector, ok := config.Selectors["price"]; ok {
+		if selector, ok := config.Selectors["price"]; ok && data.Price == "" {
 			data.Price = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["facility_name"]; ok {
+		if selector, ok := config.Selectors["facility_name"]; ok && data.FacilityName == "" {
 			data.FacilityName = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["area"]; ok {
+		if selector, ok := config.Selectors["area"]; ok && data.Area == "" {
 			data.Area = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["access"]; ok {
+		if selector, ok := config.Selectors["access"]; ok && data.Access == "" {
 			data.Access = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["occupation"]; ok {
+		if selector, ok := config.Selectors["occupation"]; ok && data.Occupation == "" {
 			data.Occupation = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["contract"]; ok {
+		if selector, ok := config.Selectors["contract"]; ok && data.Contract == "" {
 			data.Contract = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["staff_comment"]; ok {
+		if selector, ok := config.Selectors["staff_comment"]; ok && data.StaffComment == "" {
 			data.StaffComment = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["dept"]; ok {
+		if selector, ok := config.Selectors["dept"]; ok && data.Dept == "" {
 			data.Dept = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["detail"]; ok {
+		if selector, ok := config.Selectors["detail"]; ok && data.Detail == "" {
 			data.Detail = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["facility_type"]; ok {
+		if selector, ok := config.Selectors["facility_type"]; ok && data.FacilityType == "" {
 			data.FacilityType = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["holiday"]; ok {
+		if selector, ok := config.Selectors["holiday"]; ok && data.Holiday == "" {
 			data.Holiday = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["license"]; ok {
+		if selector, ok := config.Selectors["license"]; ok && data.License == "" {
 			data.License = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["required_skill"]; ok {
+		if selector, ok := config.Selectors["required_skill"]; ok && data.RequiredSkill == "" {
 			data.RequiredSkill = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["station"]; ok {
+		if selector, ok := config.Selectors["station"]; ok && data.Station == "" {
 			data.Station = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["welfare_program"]; ok {
+		if selector, ok := config.Selectors["welfare_program"]; ok && data.WelfareProgram == "" {
 			data.WelfareProgram = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["working_hours"]; ok {
+		if selector, ok := config.Selectors["working_hours"]; ok && data.WorkingHours == "" {
 			data.WorkingHours = extractWithSelector(doc, selector)
 		}
-		if selector, ok := config.Selectors["working_style"]; ok {
+		if selector, ok := config.Selectors["working_style"]; ok && data.WorkingStyle == "" {
 			data.WorkingStyle = extractWithSelector(doc, selector)
 		}
 	}
@@ -245,11 +245,20 @@ func extractJSONLD(htmlContent string, data *JobData) {
 	
 	for _, match := range matches {
 		if len(match) > 1 {
-			var jsonData []map[string]interface{}
-			if err := json.Unmarshal([]byte(match[1]), &jsonData); err == nil {
-				for _, item := range jsonData {
-					if item["@type"] == "JobPosting" {
-						extractFromJobPosting(item, data)
+			// 単一オブジェクトを試す
+			var singleJsonData map[string]interface{}
+			if err := json.Unmarshal([]byte(match[1]), &singleJsonData); err == nil {
+				if singleJsonData["@type"] == "JobPosting" {
+					extractFromJobPosting(singleJsonData, data)
+				}
+			} else {
+				// 配列形式を試す
+				var jsonDataArray []map[string]interface{}
+				if err := json.Unmarshal([]byte(match[1]), &jsonDataArray); err == nil {
+					for _, item := range jsonDataArray {
+						if item["@type"] == "JobPosting" {
+							extractFromJobPosting(item, data)
+						}
 					}
 				}
 			}
@@ -257,8 +266,13 @@ func extractJSONLD(htmlContent string, data *JobData) {
 	}
 }
 
+
 func extractFromJobPosting(item map[string]interface{}, data *JobData) {
 	// タイトル
+	if title, ok := item["title"].(string); ok && data.Name == "" {
+		data.Name = title
+		data.TitleOriginal = title
+	}
 	if desc, ok := item["description"].(string); ok && data.Name == "" {
 		lines := strings.Split(desc, "<br>")
 		if len(lines) > 0 {
@@ -268,11 +282,18 @@ func extractFromJobPosting(item map[string]interface{}, data *JobData) {
 	}
 	
 	// 給与
-	if baseSalary, ok := item["baseSalary"].(map[string]interface{}); ok && data.Price == "" {
-		if value, ok := baseSalary["value"].(map[string]interface{}); ok {
-			if min, ok := value["minValue"].(string); ok {
-				if max, ok := value["maxValue"].(string); ok {
-					data.Price = fmt.Sprintf("年収 %s〜%s円", min, max)
+	if baseSalary, ok := item["baseSalary"].(map[string]interface{}); ok {
+		if data.Price == "" {
+			if value, ok := baseSalary["value"].(map[string]interface{}); ok {
+				// float64とintの両方をチェック
+				if minVal, ok := value["minValue"].(float64); ok {
+					if maxVal, ok := value["maxValue"].(float64); ok {
+						data.Price = fmt.Sprintf("月収 %.0f〜%.0f円", minVal, maxVal)
+					}
+				} else if minValInt, ok := value["minValue"].(int); ok {
+					if maxValInt, ok := value["maxValue"].(int); ok {
+						data.Price = fmt.Sprintf("月収 %d〜%d円", minValInt, maxValInt)
+					}
 				}
 			}
 		}
@@ -303,16 +324,101 @@ func extractFromJobPosting(item map[string]interface{}, data *JobData) {
 		}
 	}
 	
+	// 職種カテゴリー
+	if occCategory, ok := item["occupationalCategory"].(string); ok && data.Occupation == "" {
+		data.Occupation = occCategory
+	}
+	
 	// 雇用形態
 	if empType, ok := item["employmentType"].(string); ok && data.Contract == "" {
-		if empType == "FULL_TIME" {
+		switch empType {
+		case "FULL_TIME":
 			data.Contract = "正社員(常勤)"
+		case "PART_TIME":
+			data.Contract = "非常勤"
+		case "CONTRACT":
+			data.Contract = "契約社員"
 		}
 	}
 	
-	// 職種
-	if title, ok := item["title"].(string); ok && data.Occupation == "" {
-		data.Occupation = title
+	// 勤務時間
+	if workHours, ok := item["workHours"].(string); ok && data.WorkingHours == "" {
+		data.WorkingHours = workHours
+	}
+	
+	// 必要資格
+	if qualifications, ok := item["qualifications"].(string); ok && data.License == "" {
+		data.License = qualifications
+	}
+	
+	// 仕事内容
+	if responsibilities, ok := item["responsibilities"].(string); ok && data.Detail == "" {
+		data.Detail = responsibilities
+	}
+	
+	// 福利厚生
+	if benefits, ok := item["jobBenefits"].(string); ok && data.WelfareProgram == "" {
+		data.WelfareProgram = benefits
+	}
+	
+	// descriptionから詳細情報を抽出
+	if desc, ok := item["description"].(string); ok {
+		extractFromDescription(desc, data)
+	}
+}
+
+// descriptionから詳細情報を抽出する関数
+func extractFromDescription(desc string, data *JobData) {
+	// 雇用形態の抽出 (常勤、非常勤、正社員等)
+	if data.Contract == "" {
+		if strings.Contains(desc, "常勤") {
+			if strings.Contains(desc, "夜勤有り") || strings.Contains(desc, "夜勤あり") {
+				data.Contract = "正社員(常勤・夜勤有り)"
+			} else {
+				data.Contract = "正社員(常勤)"
+			}
+		} else if strings.Contains(desc, "非常勤") {
+			data.Contract = "非常勤"
+		} else if strings.Contains(desc, "正社員") {
+			data.Contract = "正社員"
+		}
+	}
+	
+	// 配属先の抽出
+	if data.Position == "" {
+		if strings.Contains(desc, "配属先：病棟") || strings.Contains(desc, "病棟") {
+			data.Position = "病棟"
+		} else if strings.Contains(desc, "配属先：外来") || strings.Contains(desc, "外来") {
+			data.Position = "外来"
+		} else if strings.Contains(desc, "配属先：手術室") || strings.Contains(desc, "手術室") {
+			data.Position = "手術室"
+		}
+	}
+	
+	// 診療科目の抽出
+	if data.Dept == "" {
+		// 診療科目のパターンを探す
+		deptRegex := regexp.MustCompile(`診療科目[：:]\s*([^<\n]+)`)
+		if matches := deptRegex.FindStringSubmatch(desc); len(matches) > 1 {
+			data.Dept = strings.TrimSpace(matches[1])
+		}
+	}
+	
+	// 施設形態の抽出
+	if data.FacilityType == "" {
+		facilityRegex := regexp.MustCompile(`施設形態[：:]\s*([^<\n]+)`)
+		if matches := facilityRegex.FindStringSubmatch(desc); len(matches) > 1 {
+			data.FacilityType = strings.TrimSpace(matches[1])
+		}
+	}
+	
+	// 勤務形態の抽出（2交替、3交替等）
+	if data.WorkingStyle == "" {
+		if strings.Contains(desc, "2交替") || strings.Contains(desc, "二交替") {
+			data.WorkingStyle = "2交替"
+		} else if strings.Contains(desc, "3交替") || strings.Contains(desc, "三交替") {
+			data.WorkingStyle = "3交替"
+		}
 	}
 }
 
@@ -535,4 +641,12 @@ func main() {
 		}
 		fmt.Printf("Data extracted successfully and saved to %s\n", outputFile)
 	}
+}
+
+// Helper function for min
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }

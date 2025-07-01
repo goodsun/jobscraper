@@ -70,7 +70,7 @@ func extractByXPath(ctx context.Context, xpath string) string {
 		return ""
 	}
 
-	var result []string
+	var result string
 	err := chromedp.Run(ctx,
 		chromedp.Text(xpath, &result, chromedp.BySearch),
 	)
@@ -95,7 +95,7 @@ func extractByXPath(ctx context.Context, xpath string) string {
 		}
 		return strings.TrimSpace(text)
 	}
-	return strings.TrimSpace(result[0])
+	return strings.TrimSpace(result)
 }
 
 func scrapeData(url string, config *XPathConfig) (*ScrapedData, error) {
@@ -112,6 +112,20 @@ func scrapeData(url string, config *XPathConfig) (*ScrapedData, error) {
 		chromedp.Navigate(url),
 		chromedp.WaitReady("body"),
 		chromedp.Sleep(3*time.Second), // Wait for dynamic content to load
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			var buf []byte
+			if err := chromedp.FullScreenshot(&buf, 90).Do(ctx); err != nil {
+				return err
+			}
+			return ioutil.WriteFile("output/screenshot.png", buf, 0644)
+		}),
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			var htmlContent string
+			if err := chromedp.OuterHTML("html", &htmlContent).Do(ctx); err != nil {
+				return err
+			}
+			return ioutil.WriteFile("output/page_content.html", []byte(htmlContent), 0644)
+		}),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to navigate: %v", err)

@@ -1,0 +1,19 @@
+{
+    "name": "kango-oshigoto",
+    "domain": "kango-oshigoto.jp",
+    "selectors": {
+        "name": "h1",
+        "price": "div.salary > p.value",
+        "facility_name": "div.offer-header > p.corp",
+        "area": "div.location > p.value",
+        "occupation": "div#detail dt:contains('職種') + dd",
+        "contract": "div#detail dt:contains('勤務形態') + dd",
+        "detail": "div.offer-points",
+        "holiday": "div#detail dt:contains('年間休日') + dd",
+        "working_hours": "div#detail h3:contains('勤務時間') + dl dd",
+        "welfare_program": "div#detail h3:contains('福利厚生') + h4 + p",
+        "license": "div#detail h3:contains('条件') + p",
+        "station": "div.location > p.access",
+        "facility_type": "div#facility dt:contains('施設形態') + dd"
+    }
+}

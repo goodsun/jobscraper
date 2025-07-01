@@ -1,0 +1,15 @@
+{
+    "name": "//h1",
+    "price": "//div[contains(@class, 'salary')]/p[contains(@class, 'value')]",
+    "facility_name": "//p[contains(@class, 'corp')]",
+    "area": "//div[contains(@class, 'location')]/p[contains(@class, 'value')]",
+    "occupation": "//div[contains(@class, 'job-type')]/p[contains(@class, 'value')]",
+    "contract": "//div[contains(@class, 'job-type')]/p[contains(@class, 'value')]",
+    "detail": "//div[contains(@class, 'offer-points')]",
+    "holiday": "//div[@id='detail']//dt[contains(text(), '年間休日')]/following-sibling::dd[1]",
+    "working_hours": "//div[@id='detail']//h3[contains(text(), '勤務時間')]/following-sibling::dl[1]//dd",
+    "welfare_program": "//div[@id='detail']//h4[contains(text(), '社会保険')]/following-sibling::p[1]",
+    "license": "//div[@id='detail']//h3[contains(text(), '条件')]/following-sibling::p[1]",
+    "station": "//div[contains(@class, 'location')]/p[contains(@class, 'access')]",
+    "facility_type": "//div[@id='facility']//dt[contains(text(), '施設形態')]/following-sibling::dd[1]"
+}

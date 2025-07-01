@@ -122,6 +122,8 @@ func detectSite(url string) string {
 		return "mc-nurse"
 	} else if strings.Contains(url, "benesse-mcm.jp") {
 		return "benesse-mcm"
+	} else if strings.Contains(url, "kango-oshigoto.jp") {
+		return "kango-oshigoto"
 	}
 	// 他のサイトの判定を追加
 	return "default"

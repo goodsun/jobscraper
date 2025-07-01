@@ -154,7 +154,15 @@ func loadSiteConfig(siteName string) (*SiteConfig, error) {
 
 
 func extractWithSelector(doc *goquery.Document, selector string) string {
-	return strings.TrimSpace(doc.Find(selector).First().Text())
+	text := strings.TrimSpace(doc.Find(selector).First().Text())
+	return normalizeSpaces(text)
+}
+
+// normalizeSpaces replaces multiple consecutive spaces with a single space
+func normalizeSpaces(text string) string {
+	// 複数の半角スペースを1つに置き換え
+	re := regexp.MustCompile(`\s{2,}`)
+	return re.ReplaceAllString(text, " ")
 }
 
 func extractData(htmlContent string, config *SiteConfig) (*JobData, error) {
@@ -277,13 +285,13 @@ func extractJSONLD(htmlContent string, data *JobData) {
 func extractFromJobPosting(item map[string]interface{}, data *JobData) {
 	// タイトル
 	if title, ok := item["title"].(string); ok && data.Name == "" {
-		data.Name = title
-		data.TitleOriginal = title
+		data.Name = normalizeSpaces(title)
+		data.TitleOriginal = normalizeSpaces(title)
 	}
 	if desc, ok := item["description"].(string); ok && data.Name == "" {
 		lines := strings.Split(desc, "<br>")
 		if len(lines) > 0 {
-			data.Name = strings.TrimSpace(lines[0])
+			data.Name = normalizeSpaces(strings.TrimSpace(lines[0]))
 			data.TitleOriginal = data.Name
 		}
 	}
@@ -310,16 +318,16 @@ func extractFromJobPosting(item map[string]interface{}, data *JobData) {
 	if jobLocation, ok := item["jobLocation"].(map[string]interface{}); ok {
 		if address, ok := jobLocation["address"].(map[string]interface{}); ok {
 			if region, ok := address["addressRegion"].(string); ok && data.Prefecture == "" {
-				data.Prefecture = region
+				data.Prefecture = normalizeSpaces(region)
 			}
 			if locality, ok := address["addressLocality"].(string); ok && data.City == "" {
-				data.City = locality
+				data.City = normalizeSpaces(locality)
 			}
 			if street, ok := address["streetAddress"].(string); ok && data.Address == "" {
-				data.Address = fmt.Sprintf("%s%s%s", data.Prefecture, data.City, street)
+				data.Address = normalizeSpaces(fmt.Sprintf("%s%s%s", data.Prefecture, data.City, street))
 			}
 			if data.Area == "" {
-				data.Area = data.Prefecture + data.City
+				data.Area = normalizeSpaces(data.Prefecture + data.City)
 			}
 		}
 	}
@@ -327,13 +335,13 @@ func extractFromJobPosting(item map[string]interface{}, data *JobData) {
 	// 施設名
 	if org, ok := item["hiringOrganization"].(map[string]interface{}); ok {
 		if name, ok := org["name"].(string); ok && data.FacilityName == "" {
-			data.FacilityName = name
+			data.FacilityName = normalizeSpaces(name)
 		}
 	}
 	
 	// 職種カテゴリー
 	if occCategory, ok := item["occupationalCategory"].(string); ok && data.Occupation == "" {
-		data.Occupation = occCategory
+		data.Occupation = normalizeSpaces(occCategory)
 	}
 	
 	// 雇用形態
@@ -350,22 +358,22 @@ func extractFromJobPosting(item map[string]interface{}, data *JobData) {
 	
 	// 勤務時間
 	if workHours, ok := item["workHours"].(string); ok && data.WorkingHours == "" {
-		data.WorkingHours = workHours
+		data.WorkingHours = normalizeSpaces(workHours)
 	}
 	
 	// 必要資格
 	if qualifications, ok := item["qualifications"].(string); ok && data.License == "" {
-		data.License = qualifications
+		data.License = normalizeSpaces(qualifications)
 	}
 	
 	// 仕事内容
 	if responsibilities, ok := item["responsibilities"].(string); ok && data.Detail == "" {
-		data.Detail = responsibilities
+		data.Detail = normalizeSpaces(responsibilities)
 	}
 	
 	// 福利厚生
 	if benefits, ok := item["jobBenefits"].(string); ok && data.WelfareProgram == "" {
-		data.WelfareProgram = benefits
+		data.WelfareProgram = normalizeSpaces(benefits)
 	}
 	
 	// descriptionから詳細情報を抽出
@@ -407,7 +415,7 @@ func extractFromDescription(desc string, data *JobData) {
 		// 診療科目のパターンを探す
 		deptRegex := regexp.MustCompile(`診療科目[：:]\s*([^<\n]+)`)
 		if matches := deptRegex.FindStringSubmatch(desc); len(matches) > 1 {
-			data.Dept = strings.TrimSpace(matches[1])
+			data.Dept = normalizeSpaces(strings.TrimSpace(matches[1]))
 		}
 	}
 	
@@ -415,7 +423,7 @@ func extractFromDescription(desc string, data *JobData) {
 	if data.FacilityType == "" {
 		facilityRegex := regexp.MustCompile(`施設形態[：:]\s*([^<\n]+)`)
 		if matches := facilityRegex.FindStringSubmatch(desc); len(matches) > 1 {
-			data.FacilityType = strings.TrimSpace(matches[1])
+			data.FacilityType = normalizeSpaces(strings.TrimSpace(matches[1]))
 		}
 	}
 	

@@ -1,0 +1,20 @@
+{
+    "name": "kiracare",
+    "domain": "job.kiracare.jp",
+    "selectors": {
+        "name": "p.p-jobDetail__ttl",
+        "price": "table.p-jobDetail__table th:contains('給与') + td",
+        "facility_name": "h2.p-headingPage",
+        "area": "table.p-jobDetail__table th:contains('勤務地') + td",
+        "occupation": "p.p-jobDetail__ttl",
+        "contract": "li.c-tag__status:first",
+        "facility_type": "table.p-jobDetail__table th:contains('施設') + td",
+        "license": "table.p-jobDetail__table th:contains('資格') + td",
+        "detail": "p.u-pt16",
+        "working_hours": ".p-headingPage__normal",
+        "holiday": ".p-considerBalloon__txt",
+        "welfare_program": ".p-btnPrimary__appeal",
+        "access": "table.p-jobDetail__table th:contains('勤務地') + td",
+        "staff_comment": ".p-considerBalloon__txt"
+    }
+}

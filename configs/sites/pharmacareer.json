@@ -1,0 +1,31 @@
+{
+    "name": "pharmacareer",
+    "domain": "pharmacareer.jp",
+    "selectors": {
+        "name": "h1",
+        "price": "",
+        "facility_name": "",
+        "area": "",
+        "access": "",
+        "occupation": "",
+        "contract": "",
+        "detail": "",
+        "required_skill": "",
+        "holiday": "",
+        "working_hours": "",
+        "working_style": "",
+        "welfare_program": "",
+        "license": "",
+        "staff_comment": "",
+        "station": "",
+        "facility_type": "",
+        "dept": "",
+        "position": "",
+        "title_original": "h1"
+    },
+    "patterns": {
+        "salary_yearly": "年収\\s*([0-9,]+)万?円",
+        "prefecture": "^([^都道府県]+[都道府県])",
+        "city": "[都道府県]([^市区町村]+[市区町村])"
+    }
+}

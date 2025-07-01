@@ -124,6 +124,10 @@ func detectSite(url string) string {
 		return "benesse-mcm"
 	} else if strings.Contains(url, "kango-oshigoto.jp") {
 		return "kango-oshigoto"
+	} else if strings.Contains(url, "job.kiracare.jp") {
+		return "kiracare"
+	} else if strings.Contains(url, "pharmacareer.jp") {
+		return "pharmacareer"
 	}
 	// 他のサイトの判定を追加
 	return "default"

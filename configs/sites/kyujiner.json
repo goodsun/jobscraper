@@ -7,6 +7,7 @@
         "facility_name": "dt:contains('施設形態') + dd",
         "area": "dt:contains('勤務地') + dd",
         "access": "dt:contains('勤務地') + dd",
+        "station": "dt:contains('勤務地') + dd",
         "occupation": "dt:contains('担当業務') + dd",
         "contract": "dt:contains('雇用形態') + dd",
         "detail": "dt:contains('仕事内容') + dd",

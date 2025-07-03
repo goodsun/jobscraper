@@ -112,6 +112,25 @@ go run src/universal-extractor.go --list-configs
 3. 最初は name と price だけでテスト
 4. 段階的にフィールドを追加
 
+### 重要：複数値の取得について
+
+**雇用形態などで複数の値が存在する場合の注意点**：
+- `span` 要素を指定すると最初の要素しか取得できない
+- 複数値を取得するには親要素（`dd`など）を指定する
+
+```json
+// ❌ 悪い例：最初の1つしか取得できない
+"contract": "div.item_001 dl.employment dd span"
+
+// ✅ 良い例：全ての値を取得できる  
+"contract": "div.item_001 dl.employment dd"
+```
+
+**検証方法**：
+1. WebFetchでHTML構造を確認し、複数値があるか調査
+2. テスト実行後、取得漏れがないか確認
+3. 特に雇用形態、診療科目、福利厚生で要注意
+
 ## 注意点
 - セレクターはgoqueryの記法（jQuery風）
 - :contains() は部分一致

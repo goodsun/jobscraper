@@ -8,7 +8,7 @@
         "area": "div.item_001 dl:contains('勤務地') dd",
         "access": "dl.table_layout dt:contains('アクセス') + dd",
         "occupation": "",
-        "contract": "div.item_001 dl.employment dd span",
+        "contract": "div.item_001 dl.employment dd",
         "detail": "dl.job_description dd",
         "required_skill": "dl.skill dd",
         "holiday": "dl.table_layout dt:contains('休日') + dd",
